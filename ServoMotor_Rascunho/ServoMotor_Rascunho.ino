@@ -13,7 +13,7 @@ void loop(){
    if (Serial.available() > 0) { //Se algo vier pela porta serial.
      Recebido = Serial.read(); //O que receber, armazenar na variavel Recebido
      if (Recebido == 'O'){ //se receber o sinal de O pela serial faça: 
-       posicao = 0; //movimento para posição 0
+       posicao = 180; //movimento para posição 0
        Serial.println(posicao); //mostra no Monitor Serial o valor da posiçã
      }
       if (Recebido == 'C'){ //se receber o sinal de C pela serial faça: 
