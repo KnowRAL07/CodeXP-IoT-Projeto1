@@ -11,7 +11,12 @@ const int Ledamar = 4;
 const int Ledbranco = 7;
 const int Ledverde = 8;
 const int Ledverm = 9;
+const int botao = A0;
 
+int estadomotor = 0;
+int ultimoledaceso = 7;
+int ultimoestadobotao = LOW;
+int estadobotao = digitalRead(botao);
 // Atualizar ultimo valor para ID do seu Kit para evitar duplicatas
 byte mac[] = {
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEF
@@ -22,6 +27,7 @@ char* server = "m12.cloudmqtt.com";
 
 // Valor da porta do servidor MQTT
 int port = 19724;
+
 
 void abreFechaPortao(bool abre) {
   if (abre) {
@@ -34,6 +40,7 @@ void abreFechaPortao(bool abre) {
     digitalWrite(Ledbranco, LOW); //apaga o Led ao fechar o portão
   }
 }
+
 
 void whenMessageReceived(char* topic, byte* payload, unsigned int length) {
   // Converter pointer do tipo `byte` para typo `char`
@@ -52,11 +59,13 @@ void whenMessageReceived(char* topic, byte* payload, unsigned int length) {
 
   Serial.print("Numero lido: "); Serial.println(msgComoNumero);
   Serial.flush();
-
-  if (msgComoNumero == 1) { //se receber o sinal de O pela serial faça:
+ 
+ 
+  
+  if (msgComoNumero == 1 ) { //se receber o sinal de O pela serial faça:
     abreFechaPortao(false);
   }
-  if (msgComoNumero == 2) { //se receber o sinal de C pela serial faça:
+  if (msgComoNumero == 2 ) { //se receber o sinal de C pela serial faça:
     abreFechaPortao(true);
     
   }
@@ -72,6 +81,7 @@ void setup()
   pinMode(Ledverm, OUTPUT);
   pinMode(Ledamar, OUTPUT);
   pinMode(Ledverde, OUTPUT);
+  pinMode(botao,INPUT);
   digitalWrite(Ledbranco, LOW);
   digitalWrite(Ledverm, LOW);
   digitalWrite(Ledverde, LOW);
@@ -111,6 +121,28 @@ void setup()
 }
 void loop()
 {
+int estadobotao = digitalRead(botao);
+ 
+if (estadobotao == HIGH) 
+{
+  if(posicao == 0)
+   {
+      abreFechaPortao(true);
+      posicao == 180; 
+      delay(300);
+   }
+  else 
+    {
+      abreFechaPortao(false);
+      posicao = 0;
+      delay(300);  
+    }
+}
+   
+
+Servo1.write(posicao);
+
+
   // A biblioteca PubSubClient precisa que este método seja chamado em cada iteração de `loop()`
   // para manter a conexão MQTT e processar mensagens recebidas (via a função callback)
   client.loop();
