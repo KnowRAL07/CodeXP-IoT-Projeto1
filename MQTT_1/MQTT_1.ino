@@ -32,12 +32,19 @@ int port = 19724;
 void abreFechaPortao(bool abre) {
   if (abre) {
     posicao = 180; //movimento para posição 90
+    Servo1.write(posicao);
     Serial.println(posicao); //mostra no Monitor Serial o valor da posição
+    delay(1000);
     digitalWrite(Ledbranco, HIGH); //acender o Led ao abrir o portão
+   
   } else {
     posicao = 0; //movimento para posição 0
+    Servo1.write(posicao);
     Serial.println(posicao); //mostra no Monitor Serial o valor da posiçã
+    delay(1000);
     digitalWrite(Ledbranco, LOW); //apaga o Led ao fechar o portão
+   
+ 
   }
 }
 
@@ -60,8 +67,6 @@ void whenMessageReceived(char* topic, byte* payload, unsigned int length) {
   Serial.print("Numero lido: "); Serial.println(msgComoNumero);
   Serial.flush();
  
- 
-  
   if (msgComoNumero == 1 ) { //se receber o sinal de O pela serial faça:
     abreFechaPortao(false);
   }
@@ -69,7 +74,8 @@ void whenMessageReceived(char* topic, byte* payload, unsigned int length) {
     abreFechaPortao(true);
     
   }
-  Servo1.write(posicao); //Escreve a posição no servo
+  
+// Servo1.write(posicao); //Escreve a posição no servo
 }
 EthernetClient ethClient;
 PubSubClient client(server, port, whenMessageReceived, ethClient);
@@ -107,11 +113,8 @@ void setup()
     Serial.println("Connected");
     digitalWrite(Ledverde, HIGH);
     digitalWrite(Ledamar, LOW);
-    //client.publish("outTopic", "hello world");
-    //Serial.println("outTopic sent");
     client.publish("temperatura", "hello world");
     Serial.println("temperatura sent");
-    //client.subscribe("inTopic");
     client.subscribe("temperatura");
   } else {
     Serial.println("Failed to connect to MQTT server");
@@ -130,18 +133,18 @@ if (estadobotao == HIGH)
       abreFechaPortao(true);
       posicao == 180; 
       delay(300);
+      client.publish("temperatura", "2");
    }
   else 
     {
       abreFechaPortao(false);
       posicao = 0;
-      delay(300);  
+      delay(300);
+      client.publish("temperatura", "1");  
     }
 }
    
-
-Servo1.write(posicao);
-
+  //Servo1.write(posicao);
 
   // A biblioteca PubSubClient precisa que este método seja chamado em cada iteração de `loop()`
   // para manter a conexão MQTT e processar mensagens recebidas (via a função callback)
