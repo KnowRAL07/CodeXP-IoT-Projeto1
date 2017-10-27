@@ -8,6 +8,8 @@ const int rs = 8, en = 10, d4 = 6, d5 = 7, d6 = 5, d7 = 2;
 const int ledvermelho = 11;
 const int alerta = 3;
 
+String line1;
+String line2;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 // Inicializa o objeto do sensor ultrasônico
@@ -23,6 +25,7 @@ void bebida_que_pisca_perto (){
   digitalWrite(ledvermelho, LOW);  
   delay(100);
   lcd.clear();
+  //lcd.print("Vaga ocupada");
   lcd.print("esta perto!");
 
 }
@@ -31,12 +34,13 @@ void bebida_que_pisca_perto (){
 void bebida_que_pisca_muito_perto (){
   
   tone(alerta,2000);
-   digitalWrite(ledvermelho, HIGH);
+  digitalWrite(ledvermelho, HIGH);
   delay(50);
   noTone(alerta);
   digitalWrite(ledvermelho, LOW); 
   delay(50);
-    lcd.clear();
+  lcd.clear();
+  //lcd.print("Vaga ocupada");  
   lcd.print("esta muito perto!");
   
 }
@@ -45,8 +49,8 @@ void bebida_que_pisca_fudeu (){
   
   tone(alerta,3000);
   digitalWrite(ledvermelho, HIGH); 
-
-      lcd.clear();
+  lcd.clear();
+  //lcd.print("Vaga ocupada");
   lcd.print("fudeu!!!");
 
  // delay(100);
@@ -63,7 +67,8 @@ void setup() {
    // set up the LCD's number of columns and rows:
   lcd.begin(16, 2);
   // Print a message to the LCD.
-  lcd.print("hello, world!");
+  lcd.print("Sistema de Vaga!");
+  lcd.print(line2.substring("TESTE"));
 }
 
 
@@ -88,8 +93,10 @@ void loop() {
             bebida_que_pisca_fudeu();
         } 
        else {
-  digitalWrite(ledvermelho, LOW);
+   digitalWrite(ledvermelho, LOW);
    noTone(alerta);
+   lcd.clear();
+   lcd.print("Vaga livre");
    
      }
      
